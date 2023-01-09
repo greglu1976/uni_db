@@ -25,11 +25,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('mainapp/', include('mainapp.urls')),
-]
-
-urlpatterns += [
-    path('', RedirectView.as_view(url='/mainapp/', permanent=True)),
+    path('', include('mainapp.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

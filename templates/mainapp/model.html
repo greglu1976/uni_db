@@ -1,0 +1,87 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main>
+    <article class="my-3" id="card">
+      <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
+        <h3>Документация</h3>
+      </div>
+
+      <div>
+        <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+        <div class="row  row-cols-1 row-cols-md-2 g-4">
+          <div class="col">
+            <div class="card">
+              {% load static %}
+              <img src="{% static 'images/model.png' %}" class="bd-placeholder-img" width="100%" height="580" role="img">
+
+              <div class="card-body">
+                <h5 class="card-title">Общая модель</h5>
+                <p class="card-text">По рисунку видно, что в составе шкафа могут быть до 3 штук ИЭУ (физические устройства)</p>
+                <p class="card-text">В составе ИЭУ могут быть от 1 до бесконечности логических устройств</p>
+                <p class="card-text">В составе логического устройства могут быть от 1 до бесконечности экземпляров логических узлов</p>
+                <p class="card-text">Дискретные входы привязываются к экземпляру логического узла (а не к типу логического узла), что позволяет отвязать типы ЛУ от дискретных входов</p>
+                <p class="card-text">Экземпляр логического узла является наследником типа логического узла</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card">
+              <div class="card-header">
+                Featured
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+              <div class="card-footer text-muted">
+                2 days ago
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+              </ul>
+              <div class="card-body">
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  {% load static %}
+                  <img src="{% static 'images/model.png' %}" class="bd-placeholder-img" width="100%" height="250" role="img">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div></div>
+
+      </div>
+    </article>
+
+</main>
+
+{% endblock %}
