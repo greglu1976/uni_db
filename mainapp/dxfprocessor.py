@@ -303,7 +303,7 @@ def render_dxf(doc, msp, ied, cab):
 
 
 def dxf_report(request, cab):
-    doc = ezdxf.readfile('base_types/templates/template.dxf')
+    doc = ezdxf.readfile('mainapp/templates/template.dxf')
     #msp = doc.modelspace()
 
 

@@ -7,7 +7,7 @@ from .wordprocessor import word_report
 from .dxfprocessor import dxf_report
 
 def index(request):
-    return render(request, 'mainapp/main.html', {'activeMain': 'active', 'activeHelp': ''})
+    return render(request, 'mainapp/main.html', {'activeMain': 'active', 'activeHelp': '', 'title': 'Главная'})
 
 def reports(request):
     cabinets = Cabinets.objects.all()
@@ -19,7 +19,7 @@ def reports(request):
             cabinets1.append(cabinet)
         else:
             cabinets2.append(cabinet)
-    return render(request, 'mainapp/reports.html', {'cabinets1': cabinets1, 'cabinets2': cabinets2, 'activeMain': '', 'activeHelp': '' })
+    return render(request, 'mainapp/reports.html', {'cabinets1': cabinets1, 'cabinets2': cabinets2, 'activeMain': '', 'activeHelp': '', 'title': 'Перечень шкафов / отсеков'})
 
 def get_report(request):
     cab = request.GET.get('name')
@@ -36,7 +36,7 @@ def cabinet(request):
     type = request.GET.get('type')
     cabinet= Cabinets.objects.get(name=cab)
     print('OK', cabinet.terminal1)
-    return render(request, 'mainapp/cabinet.html', {'cabinet': cabinet})
+    return render(request, 'mainapp/cabinet.html', {'cabinet': cabinet, 'title': 'Отчеты по шкафу'})
 
 
 
@@ -55,7 +55,7 @@ def show(request):
             #print(obj)
             lds.append(obj)
         lds.sort(key=lambda x: x.name)
-        return render(request, 'mainapp/showld.html', {'ied': ied, 'lds': lds})
+        return render(request, 'mainapp/showld.html', {'ied': ied, 'lds': lds, 'title': 'Логические устройства в составе ИЭУ '+str(ied)})
 
 # -------------------------------обработка ld------------------------------
     if type == 'ld':
@@ -70,7 +70,7 @@ def show(request):
             #print(ln)
             lns.append(ln)
         lns.sort(key=lambda x: x.class_name)
-        return render(request, 'mainapp/showldobj.html', {'ld':ld, 'lns': lns})
+        return render(request, 'mainapp/showldobj.html', {'ld':ld, 'lns': lns, 'title': 'Экземпляры ЛУ в составе лог. устройства '+str(ld)})
 
     # -------------------------------обработка ln------------------------------
     if type == 'ln':
@@ -90,11 +90,11 @@ def show(request):
             objs.append(object)
             print('------------>', objs)
         objs.sort(key=lambda x: (str(x.dataset), str(x.func_group))) #str(x.cdc)[2], str(x.cdc)[0]
-        return render(request, 'mainapp/showlnobj.html', {'objs': objs, 'lntype':lntype})
+        return render(request, 'mainapp/showlnobj.html', {'objs': objs, 'lntype':lntype, 'title': 'Объекты в составе типа ЛУ '+str(lntype) })
 
 def lntypes(request):
     lntypes = LogicNodesTypes.objects.all()
-    return render(request, 'mainapp/lntypes.html', {'lntypes':lntypes})
+    return render(request, 'mainapp/lntypes.html', {'lntypes':lntypes, 'title': 'Список типов логических узлов'})
 
 def connslntype(request):
     name = request.GET.get('name')
@@ -104,7 +104,7 @@ def connslntype(request):
         ln_inst = LogicNodeInstantiated.objects.all().filter(ln_type=lntype.id)
         for inst in ln_inst:
             print(inst.short_name)
-        return render(request, 'mainapp/conns.html', {'ln_type': name, 'ln_inst':ln_inst})
+        return render(request, 'mainapp/conns.html', {'ln_type': name, 'ln_inst':ln_inst, 'title': 'Потомки типа ЛУ '+str(name)})
     if type == 'inst_ln':
         lntype = request.GET.get('lntype')
         ln_id = LogicNodeInstantiated.objects.get(short_name=name)
@@ -117,7 +117,7 @@ def connslntype(request):
             ldevice = LogicDevices.objects.get(name=ld.ld)
             print('>>>>>+', ldevice.fb_name)
             objs.append(ldevice)
-        return render(request, 'mainapp/connsfb.html', {'fb': name, 'lntype':lntype, 'objs': objs})
+        return render(request, 'mainapp/connsfb.html', {'fb': name, 'lntype':lntype, 'objs': objs, 'title': 'Состав лог. устройств для экземпляра типа ЛУ '+str(name)})
     return HttpResponse('error')
 
 def help(request):

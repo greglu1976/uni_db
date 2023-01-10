@@ -1,13 +1,16 @@
 from docx import Document
 from docx.shared import Inches
 import io
+import re
 from django.http import HttpResponse, FileResponse
 
 import pandas as pd
 
-from .tables import add_row_table_reports, add_table_reports, add_spec_row_table_reports, add_table_sg_sw, add_row_table_sg_sw, merge_table_sg_sw, add_row_table_sg_sw_empty, merge_table_sg_sw_header, add_row_table_sg_sw_final
+from .tables import add_row_table_reports, add_table_reports, add_spec_row_table_reports, add_table_sg_sw, \
+    add_row_table_sg_sw, merge_table_sg_sw, add_row_table_sg_sw_empty, merge_table_sg_sw_header, \
+    add_row_table_sg_sw_final, add_table_inputs, add_row_table_inputs
 from .models import Cabinets, PhDLDconnections, LogicDevices, DataObjects, LDLNconnections, LogicNodeInstantiated, \
-    LNtypeObjConnections, LNobject
+    LNtypeObjConnections, LNobject, Input
 
 
 def return_abbr(func_group): # возвращаем абревиатуру для отчета из номера функц. группы
@@ -27,13 +30,11 @@ def render_report(document, table_name, ied_cabinet, cab):
     OBJ_SETT = ('ASG', 'ING') # здесь объекты для функций
     OBJ_SW = ('SPG', 'ENG') # здесь объекты для программных переключателй
     PHASES = ('A', 'B', 'C') # для РАС
-    MEASURES = ('MSQI', 'MMXU', 'MMXN') # классы измерений для отчета по mms
-
 
     df = pd.DataFrame(
         columns=['_ru_ld_name', '_ru_ln_name', '_ru_signal', '_en_ld_names', '_prefix', '_ln', '_instance',
                  '_en_signal', '_clue_attr', '_status', '_func_group', '_cus', '_rdu', '_ras', '_dataset',
-                 '_sgras_name', '_dxf_signal_type', '_dxf_signal_number', 'cdc', '_ln_full_name'])
+                 '_sgras_name', '_dxf_signal_type', '_dxf_signal_number', 'cdc'])
     datasets = set()
 
     # датафрейм для генерации уставок
@@ -44,6 +45,10 @@ def render_report(document, table_name, ied_cabinet, cab):
     df_ras = pd.DataFrame(
         columns=['_ru_ld_name', '_ru_ln_name', '_sg_name', '_sg_desc', '_sg_spg_conds', '_cdc', 'weight'])
 
+    # датафрейм для входов
+
+    df_inputs = pd.DataFrame(
+        columns=['_ru_ld_name', '_ru_ln_name', '_input_name', '_input_desc'])
 
     # ищем состав лог. устройств в нем
     connections = PhDLDconnections.objects.all().filter(ied=ied_cabinet)
@@ -57,8 +62,16 @@ def render_report(document, table_name, ied_cabinet, cab):
             _ru_ln_name = str(ldln_conn.ln).split('_')[0]  # отрезаем часть после подчеркивания
             got_ln = LogicNodeInstantiated.objects.get(
                 short_name=ldln_conn.ln)  # ищем тип ЛУ, чтобы вывести его объекты
+
+
+            # соберем входы для таблицы входящих goose
+            got_inputs = Input.objects.all().filter(ln_inst=ldln_conn.ln)
+            if got_inputs:
+                for inputt in got_inputs:
+                    print('input:', _ru_ld_name, _ru_ln_name, inputt.name, inputt.description)
+                    df_inputs.loc[len(df_inputs.index)] = [_ru_ld_name, _ru_ln_name, inputt.name, inputt.description]
+
             _prefix = got_ln.ln_prefix
-            _ln_full_name = got_ln.full_name # только для ИЗМЕРЕНИЙ mms!
             _ln = got_ln.class_name
             _instance = got_ln.get_instance_report
             lnobj_conns = LNtypeObjConnections.objects.all().filter(ln_type=got_ln.ln_type)
@@ -85,7 +98,7 @@ def render_report(document, table_name, ied_cabinet, cab):
                     df.loc[len(df.index)] = [_ru_ld_name, _ru_ln_name, _ru_signal, _en_ld_name, _prefix, _ln,
                                              _instance, _en_signal, _clue_attr, _status, _func_group, _cus, _rdu,
                                              _ras, _dataset, _sgras_name, _dxf_signal_type, _dxf_signal_number,
-                                             _cdc, _ln_full_name]
+                                             _cdc]
                 # print('+++++++++++++',_ru_ld_name, '/',_ru_ln_name, ':', _ru_signal )
 
                 # датафрейм для уставок
@@ -121,24 +134,14 @@ def render_report(document, table_name, ied_cabinet, cab):
 
         # dataframe = dataframe.sort_values(by=['_func_group']) # сортируем по функциональной группе
         dataframe = dataframe.sort_values(
-            by=['_func_group', '_en_ld_names','_prefix' , '_ln', '_instance', '_en_signal'])  # сортируем по функциональной группе
+            by=['_func_group', '_en_ld_names', '_ln', '_instance', '_en_signal'])  # сортируем по функциональной группе
         # print('вторая часть марлезонского балета')
         # dataframe = dataframe.reset_index(drop=True)
         for row in dataframe.itertuples():
-            print('-----------row-',row)
-            ln_meas = str(row[2])
-            attr = str(row[3])
-            if row[6] in MEASURES: # строка измерений в таблице формируется особым способом
-                if row[5]=='FLT':
-                    ln_meas = 'АварРежим'
-                else:
-                    ln_meas = 'НормРежим'
-                attr = row[20]
-
+            # print(row)
             row_no_index = (
-            str(row[1]) + ' / ' + ln_meas + ': ' + attr, str(row[4]) + '/' + str(row[5]) + str(row[6])
+            str(row[1]) + ' / ' + str(row[2]) + ': ' + str(row[3]), str(row[4]) + '/' + str(row[5]) + str(row[6])
             + str(row[7]) + '.' + str(row[8]), row[9], row[10], return_abbr(row[11]), row[12], row[13], row[14])
-
             add_row_table_reports(t1, row_no_index)
 
     # выводим таблицу с уставками
@@ -184,6 +187,26 @@ def render_report(document, table_name, ied_cabinet, cab):
             add_row_table_sg_sw_final(t2)  # добавляем финальную строчку с пояснением * - по умолчанию
 
 
+    # выводим таблицу со входами
+    if not df_inputs.empty:
+        df_discrets = df_inputs[df_inputs['_input_name'].str[0].eq('D')] #  отфильтровали дискреты
+        df_controls = df_inputs[df_inputs['_input_name'].str[0].eq('C')] #  отфильтровали управление
+        print(df_discrets)
+        df_discrets = df_discrets.drop_duplicates(subset=['_input_desc'])
+        print(df_discrets)
+        df_discrets = df_discrets.sort_values(by=['_ru_ld_name', '_ru_ln_name', '_input_name'])
+        print(df_discrets)
+
+        p_inputs = document.add_paragraph('Входные GOOSE  '+table_name+' '+cab)
+        p_inputs.style = 'ДОК Таблица Название'
+        t_inputs = add_table_inputs(document)
+        for row in df_discrets.itertuples():
+            desc_fb_name = row[4].split('(')[0].strip()
+            text_in_braces = row[4][row[4].find("(") + 1:row[4].find(")")] # забираем текст внутри скобок - вложенные скобки не обрабатываются!
+            add_row_table_inputs(t_inputs, (desc_fb_name, text_in_braces, row[3]))
+
+
+
 # выводим таблицу РАС
 # -----------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------
@@ -191,7 +214,7 @@ def render_report(document, table_name, ied_cabinet, cab):
 
 def word_report(request, cab):
 
-    document = Document('base_types/templates/template.docx')
+    document = Document('mainapp/templates/template.docx')
     p_cab = document.add_paragraph('Шкаф '+cab)
     p_cab.style = 'ДОК Текст 3уров 2-пункт'
     #cabinets = Cabinet.objects.all()

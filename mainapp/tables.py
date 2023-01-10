@@ -288,4 +288,45 @@ def add_row_table_sg_sw_final(table): # добавляем финальную с
     return table
 
 
+#
+# ТАБЛИЦЫ ДЛЯ ОТЧЕТА по входящим GOOSE
+#
+table_inputs = (Inches(2), Inches(7), Inches(3))  #задаем ширину столбцов
+def add_table_inputs(doc): # таблица программных переключателей
+    table = doc.add_table(rows=1, cols=3)
 
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = 'Вход'
+    hdr_cells[1].text = 'Источник'
+    hdr_cells[2].text = 'Примечание'
+
+    for i in range(0,3):
+        p = hdr_cells[i].paragraphs[0]
+        p.style = 'ДОК Таблица Заголовок'
+        set_cell_vertical_alignment(hdr_cells[i], align="center")
+        p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+    set_repeat_table_header(table.rows[0]) # повторение заголовка на след странице
+
+    table.style = 'Сетка таблицы51'
+    table.allow_autofit = False
+
+    for row in table.rows:
+        for idx, width in enumerate(table_inputs):
+            row.cells[idx].width = width
+    return table
+
+def add_row_table_inputs(table, tuple2Add):  # Добавляем строку со значениями в Таблицу выходных сигналов
+    row = table.add_row()
+    for idx in range(0, 3):
+        row.cells[idx].text = str(tuple2Add[idx])
+        set_cell_vertical_alignment(row.cells[idx], align="center")
+
+    row.cells[0].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    row.cells[0].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[1].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    row.cells[1].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[2].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    row.cells[2].paragraphs[0].style = 'ДОК Таблица Текст'
+
+    return table
