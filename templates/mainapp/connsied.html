@@ -1,0 +1,42 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="container py-5">
+
+        {% if ied %}
+        <h2 class="mt-4">{{ld}}</h2>
+        <p>{{ld.description}}</p>
+        <hr class="my-4">
+        <p>входит в состав следующих ИЭУ и шкафов:</p>
+        <div class="container small">
+         <table class="table table-striped">
+            <thead>
+                <tr>
+                <th scope="col">Обозначение ИЭУ</th>
+                <th scope="col">Номер ИЭУ</th>
+                <th scope="col">Шкаф</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in ied %}
+            <tr>
+                <td>{{item.ied}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.cab}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        </div>
+        <hr class="my-4">
+
+        {% else %}
+        <h2 class="mt-4">"{{ld}}" не входит в состав ни одного функционального блока =(</h2>
+        {% endif %}
+
+</main>
+
+{% endblock %}

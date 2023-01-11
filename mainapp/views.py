@@ -118,6 +118,26 @@ def connslntype(request):
             print('>>>>>+', ldevice.fb_name)
             objs.append(ldevice)
         return render(request, 'mainapp/connsfb.html', {'fb': name, 'lntype':lntype, 'objs': objs, 'title': 'Состав лог. устройств для экземпляра типа ЛУ '+str(name)})
+        
+        # проверим ИЭУ в которые входит данное лог устройство
+    if type == 'inst_ld':
+        print('try ld...')
+        ld = LogicDevices.objects.get(name=name)
+        ld_conns = PhDLDconnections.objects.all().filter(ld=ld.id)
+        ied = list()
+        for ld_conn in ld_conns:
+            terminal1_ieds = Cabinets.objects.all().filter(terminal1=ld_conn.ied)
+            for terminal1_ied in terminal1_ieds:
+                ied.append({'name':'ИЭУ1', 'ied':str(ld_conn.ied), 'cab':terminal1_ied.name})
+            terminal2_ieds = Cabinets.objects.all().filter(terminal2=ld_conn.ied)
+            for terminal2_ied in terminal2_ieds:
+                ied.append({'name':'ИЭУ2', 'ied':str(ld_conn.ied), 'cab':terminal2_ied.name})
+            terminal3_ieds = Cabinets.objects.all().filter(terminal3=ld_conn.ied)
+            for terminal3_ied in terminal3_ieds:
+                ied.append({'name':'ИЭУ3', 'ied':str(ld_conn.ied), 'cab':terminal3_ied.name})
+            ied = sorted(ied, key= lambda x: x['cab'] )
+        return render(request, 'mainapp/connsied.html', {'ld': ld, 'ied': ied, 'title': 'Перечень ИЭУ, НКУ для лог. устройства '+str(ld)})
+
     return HttpResponse('error')
 
 def help(request):

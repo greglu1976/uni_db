@@ -21,8 +21,8 @@
             <tbody>
             {% for item in objs %}
             <tr>
-                    <td>{{item.name}}</td>
-                    <td>{{item.fb_name}}</td>
+                <td><a href="?name={{item.name}}&type=inst_ld">{{item.name}}</a></td>
+                <td>{{item.fb_name}}</td>
             </tr>
             {% endfor %}
             </tbody>
