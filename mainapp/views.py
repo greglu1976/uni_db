@@ -145,5 +145,5 @@ def help(request):
     if page=='model':
         return render(request, 'mainapp/model.html', {'title': 'Документация', 'activeMain': '', 'activeHelp': 'active'})
     else:
-        return render(request, 'mainapp/help.html', {'title': 'Помощь', 'activeMain': '', 'activeHelp': 'active'})
+        return render(request, 'mainapp/help.html', {'title': 'Документация', 'activeMain': '', 'activeHelp': 'active'})
 
