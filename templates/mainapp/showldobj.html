@@ -37,6 +37,7 @@
         </tbody>
     </table>
     <hr class="my-4">
+        {% if 'MEAS' in ld.name%}
         <div class="alert alert-warning" role="alert">
             <p><strong>Примечание:</strong></p>
             <p> Формирование поля Сигнал в выходной таблице MMS отличается для <strong>Измерений (MEAS)</strong>. 
@@ -45,6 +46,7 @@
                 То есть используется не Краткое имя функции, а Полное имя функции.
             </p>
         </div>
+        {% endif %}
     </div>
 
 
