@@ -148,6 +148,13 @@ class LNobject(models.Model):
         else:
             return ""
 
+    @property
+    def get_func_group(self):
+        if self.func_group>0:
+            return str(self.func_group)
+        else:
+            return "не определен"
+
 # --------------------LogicNodesTypes----------------------------------------
 class LogicNodesTypes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -330,6 +337,7 @@ class Cabinets(models.Model):
     terminal2 = models.ForeignKey(Terminals, related_name='ied2_set', on_delete=models.PROTECT, verbose_name='ИЭУ2', max_length=64, blank=True, null=True)
     terminal3 = models.ForeignKey(Terminals, related_name='ied3_set', on_delete=models.PROTECT, verbose_name='ИЭУ3', max_length=64, blank=True, null=True)
     description = models.TextField(max_length=1024, verbose_name='Назначение шкафа')
+    ready = models.IntegerField(verbose_name='Готовность', default=0)
 
     def __str__(self):
         return self.name

@@ -21,7 +21,7 @@ from .dxfconfig import RENDER_SIGNAL_NUMBERS, RENDER_SIGNAL_NUMBERS_RIGHT
 
 # выбираем логические блоки, которые нужно нарисовать
 def render_dxf(doc, msp, ied, cab):
-    format_dxf = 'apt' # как пример
+    format_dxf = 'prot' # как пример
     DISTANCE_BTW_FB = 320
     x = 0
     y = 0

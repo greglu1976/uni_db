@@ -27,7 +27,7 @@
                   <th scope="col">Значащий атрибут</th>
                   <th scope="col">Сигнал</th>
                   <th scope="col">Статус</th>
-                  <th scope="col">Функц. группа</th>
+                  <th scope="col">Класс тревог (Номер группы)</th>
                   <th scope="col">ЦУС/ РДУ/ РАС</th>
                   <th scope="col">Канал в РАС / уставка</th>
                   <th scope="col">Состояние переключателя <br>(SPG, ENG)</th>
@@ -45,11 +45,11 @@
                     <td>{{item.clue_attr}}</td>
                     <td>{{item.signal}}</td>
                     <td>{{item.status}}</td>
-                    {% if item.func_group == 1%}<td>АС</td>{% endif %}
-                    {% if item.func_group > 1 and item.func_group < 13 %}<td>ПС1</td>{% endif %}
-                    {% if item.func_group > 12 and item.func_group < 22 %}<td>ПС2</td>{% endif %}
-                    {% if item.func_group > 21 and item.func_group < 24 %}<td>ОС</td>{% endif %}
-                    {% if item.func_group > 23 or item.func_group < 1 %}<td>-</td>{% endif %}
+                    {% if item.func_group == 1%}<td>АС (1)</td>{% endif %}
+                    {% if item.func_group > 1 and item.func_group < 13 %}<td>ПС1 ({{item.get_func_group}})</td>{% endif %}
+                    {% if item.func_group > 12 and item.func_group < 22 %}<td>ПС2 ({{item.get_func_group}})</td>{% endif %}
+                    {% if item.func_group > 21 and item.func_group < 24 %}<td>ОС ({{item.get_func_group}})</td>{% endif %}
+                    {% if item.func_group > 23 or item.func_group < 1 %}<td>- ({{item.get_func_group}})</td>{% endif %}
                     <td>{{item.cus}}/{{item.rdu}}/{{item.ras}}</td>
                     <td>{{item.sgras_name}}</td>
                     <td>{{item.get_sg_modes}}</td>
@@ -59,10 +59,12 @@
                 </tr>
             {% endfor %}
             </tbody>
+            <tfoot></tfoot>
         </table>
         </div>
         <hr class="my-4">
         <p>{{lntype.explanation}}</p>
+        
 
 
         {% else %}

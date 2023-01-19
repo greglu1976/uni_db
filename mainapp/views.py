@@ -14,6 +14,7 @@ def reports(request):
     cabinets = cabinets.order_by('name')
     cabinets1 = list() # шкафы 1 архитектуры
     cabinets2 = list() # шкафы 2 архитектуры
+    
     for cabinet in cabinets:
         if cabinet.name[-1] =='1':
             cabinets1.append(cabinet)

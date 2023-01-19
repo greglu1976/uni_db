@@ -43,7 +43,7 @@ admin.site.register(Switch,SwitchAdmin)
 
 class CabinetsAdmin(admin.ModelAdmin):
     save_as = True
-    list_display = ('name', 'terminal1', 'terminal2', 'terminal3', 'description')
+    list_display = ('name', 'terminal1', 'terminal2', 'terminal3', 'description', 'ready')
     list_filter = ('name',)
 admin.site.register(Cabinets,CabinetsAdmin)
 

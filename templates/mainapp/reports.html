@@ -19,6 +19,7 @@
                       <th scope="col">ИЭУ1</th>
                       <th scope="col">ИЭУ2</th>
                       <th scope="col">ИЭУ3</th>
+                      <th scope="col">Готовность</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,9 +30,35 @@
                         <td><a href="show/?name={{item.terminal1}}&type=ied">{{item.terminal1}}</a></td>
                         <td><a href="show/?name={{item.terminal2}}&type=ied">{{item.get_terminal2}}</a></td>
                         <td><a href="show/?name={{item.terminal3}}&type=ied">{{item.get_terminal3}}</a></td>
+                        {% if item.ready == 0 %}
+                        <td><span class="badge rounded-pill bg-danger">не лежал конь</span></td>
+                        {% endif %}
+                        {% if item.ready > 0 and item.ready < 50  %}
+                        <td><span class="badge rounded-pill text-bg-warning">начало работы</span></td>
+                        {% endif %}
+                        {% if item.ready > 50 and item.ready < 100  %}
+                        <td>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{item.ready}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                {{item.ready}}%
+                            </div>
+                        </div>
+                        </td>
+                        {% endif %}
+                        {% if item.ready == 100  %}
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                Готов
+                                </div>
+                            </div>
+                        </td>
+                        {% endif %}
+
                     </tr>
                 {% endfor %}
                 </tbody>
+                <tfoot></tfoot>
         </table>
     </div>
     <hr class="my-4">
@@ -47,6 +74,7 @@
                       <th scope="col">ИЭУ1</th>
                       <th scope="col">ИЭУ2</th>
                       <th scope="col">ИЭУ3</th>
+                      <th scope="col">Готовность</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,6 +85,18 @@
                         <td><a href="show/?name={{item.terminal1}}&type=ied">{{item.terminal1}}</a></td>
                         <td><a href="show/?name={{item.terminal2}}&type=ied">{{item.get_terminal2}}</a></td>
                         <td><a href="show/?name={{item.terminal3}}&type=ied">{{item.get_terminal3}}</a></td>
+                        {% if item.ready == 0 %}
+                        <td><span class="badge rounded-pill bg-danger">не лежал конь</span></td>
+                        {% endif %}
+                        {% if item.ready > 0 and item.ready < 50  %}
+                        <td><span class="badge rounded-pill text-bg-warning">начало работы</span></td>
+                        {% endif %}
+                        {% if item.ready > 50 and item.ready < 100  %}
+                        <td><span class="badge rounded-pill text-bg-info">конец работы</span></td>
+                        {% endif %}
+                        {% if item.ready == 100  %}
+                        <td><span class="badge rounded-pill bg-success">готов</span></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
