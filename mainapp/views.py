@@ -37,7 +37,7 @@ def cabinet(request):
     type = request.GET.get('type')
     cabinet= Cabinets.objects.get(name=cab)
     print('OK', cabinet.terminal1)
-    return render(request, 'mainapp/cabinet.html', {'cabinet': cabinet, 'title': 'Отчеты по шкафу'})
+    return render(request, 'mainapp/cabinet.html', {'cabinet': cabinet, 'title': 'Отчеты по шкафу: '+cabinet.name})
 
 
 
