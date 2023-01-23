@@ -93,7 +93,7 @@ admin.site.register(LogicNodesTypes, LogicNodesTypesAdmin)
 class LNobjectAdmin(admin.ModelAdmin):
     save_as = True
     list_display = ('data_object','cdc', 'signal', 'status', 'clue_attr', 'cus', 'rdu', 'ras', 'dataset', 'sgras_name','sg_modes', 'signal_type', 'signal_number')
-    list_filter = ('data_object',)
+    list_filter = ('data_object','cdc')
 admin.site.register(LNobject, LNobjectAdmin)
 
 

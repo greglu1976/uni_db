@@ -157,6 +157,10 @@ def render_report(document, table_name, ied_cabinet, cab):
                 else:
                     ln_meas = 'НормРежим'
                 attr = row[20]
+            if str(row[4]) == 'SYS':# строка диагностики в таблице формируется особым способом
+                ln_meas = 'Диагностика'
+
+
 
 
             row_no_index = (
