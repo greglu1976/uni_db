@@ -143,7 +143,7 @@ def render_report(document, table_name, ied_cabinet, cab):
 
         # dataframe = dataframe.sort_values(by=['_func_group']) # сортируем по функциональной группе
         dataframe = dataframe.sort_values(
-            by=['_func_group', '_en_ld_names', '_ln', '_instance', '_en_signal'])  # сортируем по функциональной группе
+            by=['_func_group', '_prefix', '_en_ld_names', '_ln', '_instance', '_en_signal'])  # сортируем по функциональной группе
         # print('вторая часть марлезонского балета')
         # dataframe = dataframe.reset_index(drop=True)
         for row in dataframe.itertuples():
@@ -151,6 +151,7 @@ def render_report(document, table_name, ied_cabinet, cab):
 
             ln_meas = str(row[2])
             attr = str(row[3])
+            
             if row[6] in MEASURES: # строка измерений в таблице формируется особым способом
                 if row[5]=='FLT':
                     ln_meas = 'АварРежим'
@@ -159,8 +160,8 @@ def render_report(document, table_name, ied_cabinet, cab):
                 attr = row[20]
             if str(row[4]) == 'SYS':# строка диагностики в таблице формируется особым способом
                 ln_meas = 'Диагностика'
-
-
+                if str(row[6]) == 'LLN0':
+                    ln_meas = 'БУ'
 
 
             row_no_index = (
