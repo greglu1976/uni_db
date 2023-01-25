@@ -90,7 +90,7 @@ def show(request):
             object = LNobject.objects.get(data_object=object_id)
             objs.append(object)
             print('------------>', objs)
-        objs.sort(key=lambda x: (str(x.dataset), str(x.func_group))) #str(x.cdc)[2], str(x.cdc)[0]
+        objs.sort(key=lambda x: (str(x.dataset), str(x.func_group), str(x.cdc), str(x.data_object))) #, str(x.cdc)[0]
         return render(request, 'mainapp/showlnobj.html', {'objs': objs, 'lntype':lntype, 'title': 'Объекты в составе типа ЛУ '+str(lntype) })
 
 def lntypes(request):
