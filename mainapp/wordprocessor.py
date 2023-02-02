@@ -162,7 +162,8 @@ def render_report(document, table_name, ied_cabinet, cab):
                 ln_meas = 'Диагностика'
                 if str(row[6]) == 'LLN0':
                     ln_meas = 'БУ'
-
+                if 'IHND' in str(row[6]) or 'ILED' in str(row[6]):
+                    ln_meas = str(row[2])
 
             row_no_index = (
             str(row[1]) + ' / ' + ln_meas + ': ' + attr, str(row[4]) + '/' + str(row[5]) + str(row[6])
