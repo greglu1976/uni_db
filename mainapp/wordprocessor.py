@@ -164,6 +164,11 @@ def render_report(document, table_name, ied_cabinet, cab):
                     ln_meas = 'БУ'
                 if 'IHND' in str(row[6]) or 'ILED' in str(row[6]):
                     ln_meas = str(row[2])
+                if 'LCCH' in str(row[6]):
+                    if str(row[5])=='PB':
+                        ln_meas = 'ШП'
+                    if str(row[5])=='SB':
+                        ln_meas = 'ШС'
 
             row_no_index = (
             str(row[1]) + ' / ' + ln_meas + ': ' + attr, str(row[4]) + '/' + str(row[5]) + str(row[6])
