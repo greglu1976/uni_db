@@ -8,7 +8,7 @@ import pandas as pd
 
 from .tables import add_row_table_reports, add_table_reports, add_spec_row_table_reports, add_table_sg_sw, \
     add_row_table_sg_sw, merge_table_sg_sw, add_row_table_sg_sw_empty, merge_table_sg_sw_header, \
-    add_row_table_sg_sw_final, add_table_inputs, add_row_table_inputs
+    add_row_table_sg_sw_final, add_table_inputs, add_row_table_inputs, add_table_reports_new, add_row_table_reports_new
 from .models import Cabinets, PhDLDconnections, LogicDevices, DataObjects, LDLNconnections, LogicNodeInstantiated, \
     LNtypeObjConnections, LNobject, Input
 
@@ -136,7 +136,7 @@ def render_report(document, table_name, ied_cabinet, cab):
 
     p1 = document.add_paragraph('Наборы данных исходящих отчетов '+ table_name +' '+cab)
     p1.style = 'ДОК Таблица Название'
-    t1 = add_table_reports(document)
+    t1 = add_table_reports_new(document)
 
     for dataframe in dataframe_list:
         add_spec_row_table_reports(t1, ('Имя набора данных:', dataframe.iloc[0]['_dataset']))
@@ -170,10 +170,13 @@ def render_report(document, table_name, ied_cabinet, cab):
                     if str(row[5])=='SB':
                         ln_meas = 'ШС'
 
-            row_no_index = (
+            row_no_index = ( # старая таблица
             str(row[1]) + ' / ' + ln_meas + ': ' + attr, str(row[4]) + '/' + str(row[5]) + str(row[6])
             + str(row[7]) + '.' + str(row[8]), row[9], row[10], return_abbr(str(row[10]),row[11]), row[12], row[13], row[14])
-            add_row_table_reports(t1, row_no_index)
+            # новая таблица
+            row_no_index_update_table = (str(row[1]) + ' / ' + ln_meas + ': ' + attr, row[10], return_abbr(str(row[10]), row[11]), row[12], row[13], row[14],
+            str(row[4]) + '/' + str(row[5]) + str(row[6]) + str(row[7]) + '.' + str(row[8]), row[9])
+            add_row_table_reports_new(t1,  row_no_index_update_table)
 
     # выводим таблицу с уставками
     if not df_sg.empty:

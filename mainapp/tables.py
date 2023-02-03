@@ -330,3 +330,122 @@ def add_row_table_inputs(table, tuple2Add):  # Добавляем строку �
     row.cells[2].paragraphs[0].style = 'ДОК Таблица Текст'
 
     return table
+
+
+
+#
+# НОВАЯ ТАБЛИЦА MMS СТО
+#
+table_reports_new = (Inches(4), Inches(3), Inches(1), Inches(0.5), Inches(0.5), Inches(0.5), Inches(2), Inches(1))  #задаем ширину столбцов таблицы вывода репортов
+
+def add_table_reports_new(doc): # новая таблица исходящих отчетов
+    table = doc.add_table(rows=2, cols=8)
+
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = 'Информационный сигнал'
+    hdr_cells[2].text = 'КТ'
+    hdr_cells[3].text = 'ЦУС'
+    hdr_cells[4].text = 'РДУ'
+    hdr_cells[5].text = 'РАС'
+    hdr_cells[6].text = 'Отображение сигнала в МЭК'
+    for i in range(0,8):
+        p = hdr_cells[i].paragraphs[0]
+        p.style = 'ДОК Таблица Заголовок'
+        set_cell_vertical_alignment(hdr_cells[i], align="center")
+        p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+    set_vertical_cell_direction(hdr_cells[3], 'btLr') # к 4 столбцу применяем вертикальное выранивание
+    set_vertical_cell_direction(hdr_cells[4], 'btLr') # к 5 столбцу применяем вертикальное выранивание
+    set_vertical_cell_direction(hdr_cells[5], 'btLr') # к 6 столбцу применяем вертикальное выранивание
+
+    set_repeat_table_header(table.rows[0]) # повторение заголовка на след странице
+
+    # p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    # p.runs[0].font.size = Pt(10)
+
+    hdr_cells = table.rows[1].cells # вторая строка заголовка таблицы
+    hdr_cells[0].text = 'Наименование'
+    hdr_cells[1].text = 'Статус'
+    hdr_cells[6].text = 'DO'
+    hdr_cells[7].text = 'DA'
+
+    set_repeat_table_header(table.rows[1])  # повторение заголовка на след странице
+    for i in range(0,8):
+        p = hdr_cells[i].paragraphs[0]
+        p.style = 'ДОК Таблица Заголовок'
+        set_cell_border(hdr_cells[i], bottom={"val": "double"}) # подчеркиваем заголовок двойной чертой
+
+
+    # формируем финальный заголок слияниями ячеек
+    table.cell(0, 0).merge(table.cell(0, 1))
+    table.cell(0, 2).merge(table.cell(1, 2))
+    table.cell(0, 3).merge(table.cell(1, 3))
+    table.cell(0, 4).merge(table.cell(1, 4))
+    table.cell(0, 5).merge(table.cell(1, 5))
+    table.cell(0, 6).merge(table.cell(0, 7))
+
+    table.style = 'Сетка таблицы51'
+    table.allow_autofit = False
+
+    for row in table.rows:
+        for idx, width in enumerate(table_reports):
+            row.cells[idx].width = width
+    #add_row_table_reports(table, ('','','','','','')) # добавляем пустую строчку, чтобы двойное подчеркивание сохранить
+    return table
+
+def add_row_table_reports_new(table, tuple2Add):  # Добавляем строку со значениями в Таблицу выходных сигналов
+    row = table.add_row()
+    leng=len(table.rows)
+    if (leng==3):
+        # если это первая строчка, то сверху делаем двойную черту
+        row_cells = table.rows[2].cells
+        for i in range(0, 8):
+            set_cell_border(row_cells[i], top={"val": "double"})
+
+    for idx in range(0, 8):
+        row.cells[idx].text = str(tuple2Add[idx])
+        row.cells[idx].width = table_reports[idx]
+        set_cell_vertical_alignment(row.cells[idx], align="center")
+    row.cells[0].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    row.cells[0].paragraphs[0].style = 'ДОК Таблица Текст Нумерованный'
+    row.cells[1].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    row.cells[1].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[2].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    row.cells[2].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[3].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    row.cells[3].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[4].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    row.cells[4].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[5].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    row.cells[5].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[6].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    row.cells[6].paragraphs[0].style = 'ДОК Таблица Текст'
+    row.cells[7].paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    row.cells[7].paragraphs[0].style = 'ДОК Таблица Текст'
+
+    return table
+
+def add_spec_row_table_reports_new(table, tuple2Add):  # Добавляем особую строку со значениями в Таблицу выходных сигналов
+    row = table.add_row()
+    leng = len(table.rows)
+    if (leng == 3):
+        # если это первая строчка, то сверху делаем двойную черту
+        row_cells = table.rows[2].cells
+        for i in range(0, 8):
+            set_cell_border(row_cells[i], top={"val": "double"})
+    row.cells[0].text = str(tuple2Add[0])
+    row.cells[0].width = table_reports[0]
+    set_cell_vertical_alignment(row.cells[0], align="center")
+    row.cells[1].text = str(tuple2Add[1])
+    row.cells[1].width = table_reports[1]
+    set_cell_vertical_alignment(row.cells[1], align="center")
+
+    for idx in range(0, 8):
+        row.cells[idx].paragraphs[0].style = 'ДОК Таблица Текст'
+
+    table.cell(leng-1, 1).merge(table.cell(leng-1, 7))
+    # заливка особой строки - там где имя набора данных
+    shading_elm1 = parse_xml(r'<w:shd {} w:fill="D9D9D9"/>'.format(nsdecls('w')))
+    table.cell(leng - 1, 0)._tc.get_or_add_tcPr().append(shading_elm1)
+    shading_elm2 = parse_xml(r'<w:shd {} w:fill="D9D9D9"/>'.format(nsdecls('w')))
+    table.cell(leng - 1, 1)._tc.get_or_add_tcPr().append(shading_elm2)
