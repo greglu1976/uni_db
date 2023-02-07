@@ -70,7 +70,7 @@ class Statuses(models.Model):
 # --------------------Signals----------------------------------------
 class Signals(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=64, verbose_name='Сигналы', unique=True)
+    name = models.CharField(max_length=128, verbose_name='Сигналы', unique=True)
 
     def __str__(self):
         return self.name
