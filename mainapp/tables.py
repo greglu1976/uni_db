@@ -388,7 +388,7 @@ def add_table_reports_new(doc): # новая таблица исходящих �
     table.allow_autofit = False
 
     for row in table.rows:
-        for idx, width in enumerate(table_reports):
+        for idx, width in enumerate(table_reports_new):
             row.cells[idx].width = width
     #add_row_table_reports(table, ('','','','','','')) # добавляем пустую строчку, чтобы двойное подчеркивание сохранить
     return table
