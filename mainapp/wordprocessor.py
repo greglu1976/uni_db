@@ -139,8 +139,9 @@ def render_report(document, table_name, ied_cabinet, cab):
     t1 = add_table_reports_new(document)
 
     for dataframe in dataframe_list:
-        add_spec_row_table_reports(t1, ('Имя набора данных:', dataframe.iloc[0]['_dataset']))
-
+        ds_name = dataframe.iloc[0]['_dataset']
+        add_spec_row_table_reports(t1, ('Имя набора данных:', ds_name))
+        
         # dataframe = dataframe.sort_values(by=['_func_group']) # сортируем по функциональной группе
         dataframe = dataframe.sort_values(
             by=['_func_group', '_prefix', '_en_ld_names', '_ln', '_instance', '_en_signal'])  # сортируем по функциональной группе
@@ -170,13 +171,23 @@ def render_report(document, table_name, ied_cabinet, cab):
                     if str(row[5])=='SB':
                         ln_meas = 'ШС'
 
-            row_no_index = ( # старая таблица
-            str(row[1]) + ' / ' + ln_meas + ': ' + attr, str(row[4]) + '/' + str(row[5]) + str(row[6])
-            + str(row[7]) + '.' + str(row[8]), row[9], row[10], return_abbr(str(row[10]),row[11]), row[12], row[13], row[14])
-            # новая таблица
-            row_no_index_update_table = (str(row[1]) + ' / ' + ln_meas + ': ' + attr, row[10], return_abbr(str(row[10]), row[11]), row[12], row[13], row[14],
-            str(row[4]) + '/' + str(row[5]) + str(row[6]) + str(row[7]) + '.' + str(row[8]), row[9])
-            add_row_table_reports_new(t1,  row_no_index_update_table)
+            # формируем уставки особым образом
+            if 'SG' in row[15]:
+                print('---', row[1], row[2],row[3],row[4],row[5],row[6],row[7], row[8],row[9],row[10],row[11],row[12],row[13], row[14],row[15],row[16],row[17],row[18],row[19], row[20])
+                sett_val = row[3]
+                if row[16]!='':
+                    sett_val = row[16]
+                row_no_index_update_table = (str(row[1]) + ' / ' + ln_meas + ': ' + str(sett_val), row[10], return_abbr(str(row[10]), row[11]), row[12], row[13], row[14],
+                str(row[4]) + '/' + str(row[5]) + str(row[6]) + str(row[7]) + '.' + str(row[8]), row[9])
+                add_row_table_reports_new(t1,  row_no_index_update_table)
+            else:                    
+                row_no_index = ( # старая таблица
+                str(row[1]) + ' / ' + ln_meas + ': ' + attr, str(row[4]) + '/' + str(row[5]) + str(row[6])
+                + str(row[7]) + '.' + str(row[8]), row[9], row[10], return_abbr(str(row[10]),row[11]), row[12], row[13], row[14])
+                # новая таблица
+                row_no_index_update_table = (str(row[1]) + ' / ' + ln_meas + ': ' + attr, row[10], return_abbr(str(row[10]), row[11]), row[12], row[13], row[14],
+                str(row[4]) + '/' + str(row[5]) + str(row[6]) + str(row[7]) + '.' + str(row[8]), row[9])
+                add_row_table_reports_new(t1,  row_no_index_update_table)
 
     # выводим таблицу с уставками
     if not df_sg.empty:
